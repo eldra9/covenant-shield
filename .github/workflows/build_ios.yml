@@ -20,17 +20,12 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Clean and regenerate official native iOS platform
+      - name: Prepare native iOS platform
         run: |
           cd "Guard app/flutter_app"
           rm -rf ios
           flutter create . --platforms=ios --org co.ke.covenantshield
           flutter pub get
-          cd ios
-          echo "CODE_SIGNING_ALLOWED=NO" >> Flutter/Release.xcconfig
-          echo "CODE_SIGNING_REQUIRED=NO" >> Flutter/Release.xcconfig
-          echo "CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
-          echo "EXPANDED_CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
 
       - name: Configure iOS permissions in Info.plist
         run: |
@@ -42,18 +37,43 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" "$PLIST" 2>/dev/null || true
           /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true" "$PLIST" 2>/dev/null || true
 
-      - name: Build iOS Application (Release, No Codesign)
+      - name: Disable Xcode Code Signing for CI
+        run: |
+          cd "Guard app/flutter_app/ios"
+          # Disable signing in all configs
+          for CFG in Flutter/Debug.xcconfig Flutter/Release.xcconfig; do
+            if [ -f "$CFG" ]; then
+              echo "CODE_SIGNING_ALLOWED=NO" >> "$CFG"
+              echo "CODE_SIGNING_REQUIRED=NO" >> "$CFG"
+              echo "CODE_SIGN_IDENTITY=" >> "$CFG"
+              echo "EXPANDED_CODE_SIGN_IDENTITY=" >> "$CFG"
+            fi
+          done
+          # Also patch project.pbxproj to turn off code signing requirement
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual; CODE_SIGNING_ALLOWED = NO; CODE_SIGNING_REQUIRED = NO;/g' Runner.xcodeproj/project.pbxproj 2>/dev/null || true
+
+      - name: Build iOS IPA & Runner
         run: |
           cd "Guard app/flutter_app"
-          flutter build ios --release --no-codesign
+          # Build unsigned IPA archive
+          flutter build ipa --no-codesign || flutter build ios --release --no-codesign
 
       - name: Package IPA
         run: |
           cd "Guard app/flutter_app"
           mkdir -p Payload
-          cp -r build/ios/iphoneos/Runner.app Payload/
-          zip -qr AegisGuard-iOS.ipa Payload
-          ls -lh AegisGuard-iOS.ipa
+          # Search for Runner.app in build outputs
+          RUNNER_APP=$(find build -name "Runner.app" -type d | head -n 1)
+          if [ -n "$RUNNER_APP" ]; then
+            echo "Found Runner.app at $RUNNER_APP"
+            cp -r "$RUNNER_APP" Payload/
+            zip -qr AegisGuard-iOS.ipa Payload
+            ls -lh AegisGuard-iOS.ipa
+          else
+            echo "❌ Error: Runner.app not found. Build tree:"
+            find build -maxdepth 4 || true
+            exit 1
+          fi
 
       - name: Upload iOS IPA Artifact
         uses: actions/upload-artifact@v4
