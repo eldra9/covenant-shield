@@ -27,6 +27,7 @@ class _ShiftSwapScreenState extends State<ShiftSwapScreen> {
       department: '',
       emergencyContact: '',
     );
+    final otherGuards = [placeholderGuard];
     User targetGuard = placeholderGuard;
     final reasonController = TextEditingController();
 
