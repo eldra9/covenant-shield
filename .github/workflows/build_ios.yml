@@ -20,82 +20,11 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Initialize iOS Platform & Dependencies
-        run: |
-          cd "Guard app/flutter_app"
-          rm -rf ios
-          flutter create . --platforms=ios --org co.ke.covenantshield
-          flutter pub get
-
-      - name: Configure iOS Permissions in Info.plist
-        run: |
-          cd "Guard app/flutter_app/ios"
-          PLIST="Runner/Info.plist"
-          /usr/libexec/PlistBuddy -c "Add :NSLocationWhenInUseUsageDescription string 'AegisGuard requires location access to verify guard check-ins.'" "$PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSLocationAlwaysAndWhenInUseUsageDescription string 'AegisGuard requires location access for geofence verification.'" "$PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'AegisGuard requires camera access to scan security entry QR codes.'" "$PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" "$PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true" "$PLIST" 2>/dev/null || true
-
       - name: Build iOS Application & Package Artifacts
         run: |
           cd "Guard app/flutter_app"
-          mkdir -p build-artifacts
-
-          echo "=== 1. Building iOS Application ==="
-          # Build simulator bundle (guaranteed 100% build success without Apple signing requirements)
-          flutter build ios --simulator --debug
-
-          echo "=== 2. Patching Pods & Project Signing Settings ==="
-          cd ios
-          # Patch Podfile to disable code signing across all CocoaPods targets
-          if [ -f Podfile ]; then
-            cat << 'EOF' >> Podfile
-
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    flutter_additional_ios_build_settings(target)
-    target.build_configurations.each do |config|
-      config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-      config.build_settings['CODE_SIGNING_REQUIRED'] = 'NO'
-      config.build_settings['CODE_SIGN_IDENTITY'] = ''
-      config.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ''
-    end
-  end
-end
-EOF
-          fi
-
-          # Disable automatic signing in Runner project
-          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual; CODE_SIGNING_ALLOWED = NO; CODE_SIGNING_REQUIRED = NO;/g' Runner.xcodeproj/project.pbxproj 2>/dev/null || true
-          cd ..
-
-          echo "=== 3. Attempting Device Release Build ==="
-          flutter build ios --release --no-codesign || true
-
-          echo "=== 4. Packaging IPA and Simulator Zip ==="
-          # Check for physical device build first, fallback to simulator build
-          if [ -d "build/ios/iphoneos/Runner.app" ]; then
-            echo "Packaging from release device Runner.app..."
-            mkdir -p Payload
-            cp -r build/ios/iphoneos/Runner.app Payload/
-            zip -qr build-artifacts/AegisGuard-iOS.ipa Payload
-          elif [ -d "build/ios/iphonesimulator/Runner.app" ]; then
-            echo "Packaging from simulator Runner.app..."
-            mkdir -p Payload
-            cp -r build/ios/iphonesimulator/Runner.app Payload/
-            zip -qr build-artifacts/AegisGuard-iOS.ipa Payload
-          fi
-
-          # Also package standalone Simulator zip
-          if [ -d "build/ios/iphonesimulator/Runner.app" ]; then
-            cd build/ios/iphonesimulator
-            zip -qr ../../../build-artifacts/AegisGuard-iOS-Simulator.zip Runner.app
-            cd ../../..
-          fi
-
-          echo "=== Generated Artifacts ==="
-          ls -lh build-artifacts/
+          chmod +x build_ios_ci.sh
+          ./build_ios_ci.sh
 
       - name: Upload iOS App Artifacts
         uses: actions/upload-artifact@v4
