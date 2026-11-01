@@ -34,3 +34,8 @@ backend.pid
 # Scratch and caches
 .cache/
 .temp/
+
+# Django generated
+backend/staticfiles/
+backend/.env
+backend/media/
