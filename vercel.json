@@ -1,0 +1,71 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "adminportal": {
+      "root": "Admin portal",
+      "framework": "vite",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "backend",
+          "format": "url",
+          "env": "VITE_API_BASE_URL"
+        }
+      ]
+    },
+    "backend": {
+      "root": "backend",
+      "framework": "django"
+    },
+    "clientportal": {
+      "root": "client portal",
+      "framework": "vite",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "backend",
+          "format": "url",
+          "env": "VITE_API_BASE_URL"
+        }
+      ]
+    },
+    "publicwebsite": {
+      "root": "Public website",
+      "framework": "vite",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "backend",
+          "format": "url",
+          "env": "VITE_API_BASE_URL"
+        }
+      ]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "backend"
+      }
+    },
+    {
+      "source": "/admin-portal/(.*)",
+      "destination": {
+        "service": "adminportal"
+      }
+    },
+    {
+      "source": "/portal/(.*)",
+      "destination": {
+        "service": "clientportal"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "publicwebsite"
+      }
+    }
+  ]
+}

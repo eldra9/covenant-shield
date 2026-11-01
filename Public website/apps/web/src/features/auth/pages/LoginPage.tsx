@@ -13,10 +13,11 @@ export interface LoginPageProps {
 type UserRole = 'CLIENT' | 'GUARD' | 'STAFF';
 
 export const LoginPage: React.FC<LoginPageProps> = ({ onNavigate }) => {
-  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1').replace(/\/$/, '');
-  const clientPortalBaseUrl = (import.meta.env.VITE_CLIENT_PORTAL_URL || 'http://localhost:3001').replace(/\/$/, '');
-  const adminPortalBaseUrl = (import.meta.env.VITE_ADMIN_PORTAL_URL || 'http://localhost:3002').replace(/\/$/, '');
-  const guardPortalBaseUrl = (import.meta.env.VITE_GUARD_PORTAL_URL || 'http://localhost:3003').replace(/\/$/, '');
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || (isLocal ? 'http://localhost:8000/api/v1' : '/api/v1')).replace(/\/$/, '');
+  const clientPortalBaseUrl = (import.meta.env.VITE_CLIENT_PORTAL_URL || (isLocal ? 'http://localhost:3001' : '/portal')).replace(/\/$/, '');
+  const adminPortalBaseUrl = (import.meta.env.VITE_ADMIN_PORTAL_URL || (isLocal ? 'http://localhost:3002' : '/admin-portal')).replace(/\/$/, '');
+  const guardPortalBaseUrl = (import.meta.env.VITE_GUARD_PORTAL_URL || (isLocal ? 'http://localhost:3003' : '/guard-portal')).replace(/\/$/, '');
 
   const [role, setRole] = useState<UserRole>('CLIENT');
   const [email, setEmail] = useState('');

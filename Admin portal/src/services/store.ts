@@ -42,7 +42,8 @@ const STORAGE_KEYS = {
   CURRENT_USER_ID: 'covenant_shield_current_user_id_v3',
 };
 
-const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || (isLocal ? 'http://localhost:8000/api/v1' : '/api/v1');
 
 // Listeners for reactive updates
 type Listener = () => void;

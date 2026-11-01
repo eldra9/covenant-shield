@@ -227,8 +227,8 @@ export default function App() {
   const handleLogout = () => {
     sessionManager.resetDatabase();
     setIsAuthenticated(false);
-    // Redirect to the Public Website login page
-    const publicLoginUrl = (import.meta.env.VITE_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '') + '/login';
+    const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+    const publicLoginUrl = (import.meta.env.VITE_PUBLIC_SITE_URL || (isLocal ? 'http://localhost:3000' : '')).replace(/\/$/, '') + '/login';
     window.location.assign(publicLoginUrl);
   };
 
