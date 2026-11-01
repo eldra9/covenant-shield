@@ -1,0 +1,6 @@
+{
+  "name": "Covenant Shield Operations Control",
+  "description": "Internal administration and security operations system for Covenant Shield Security Services, managing service requests, client accounts, security sites, guards, shift schedules, attendance exceptions, incident cases, and audit trails.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

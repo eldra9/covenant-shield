@@ -1,0 +1,98 @@
+{
+  "brand": {
+    "name": "Covenant Shield",
+    "suffix": "Security Services",
+    "tagline": "Quiet vigilance. Every shift, kept."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "requestTracking": "Request Tracking",
+    "caseTracking": "Case Tracking",
+    "feedbackComplaints": "Feedback & Complaints",
+    "contact": "Contact",
+    "login": "Login",
+    "requestService": "Request a Service",
+    "trackRequest": "Request Tracking",
+    "trackCase": "Case Tracking"
+  },
+  "hero": {
+    "eyebrow": "COVENANT SHIELD · SECURITY SERVICES",
+    "h1Line1": "Quiet vigilance.",
+    "h1Line2": "Every shift,",
+    "h1Kept": "kept.",
+    "subtitle": "Professionally managed security for businesses, institutions and events, with one clear record of every request, every post and every shift.",
+    "ctaRequest": "Request a Service",
+    "ctaTrack": "Track a Request",
+    "scrollCue": "Scroll to explore"
+  },
+  "marquee": {
+    "services": [
+      "Static Guarding",
+      "Event Security",
+      "VIP & Escort Services",
+      "Patrol Services",
+      "CCTV Monitoring",
+      "Custom Protective Deployments"
+    ]
+  },
+  "services": {
+    "heading": "What we protect.",
+    "eyebrow": "OPERATIONAL CAPABILITIES",
+    "subheading": "Standard operating procedures enforced by supervised rosters and transparent dispatch records.",
+    "cta": "Request this service",
+    "s1Title": "Static Guarding",
+    "s1Desc": "Dedicated guards at your gate, lobby or perimeter, rostered around your hours.",
+    "s2Title": "Event Security",
+    "s2Desc": "Crowd-aware coverage for launches, ceremonies and gatherings, planned with you in advance.",
+    "s3Title": "VIP & Escort Services",
+    "s3Desc": "Discreet escort and secure movement, planned route by route.",
+    "s4Title": "Patrol Services",
+    "s4Desc": "Scheduled patrols of your premises, planned around your risk.",
+    "s5Title": "CCTV Monitoring",
+    "s5Desc": "Camera monitoring with a clear route to escalation.",
+    "s6Title": "Special Deployments",
+    "s6Desc": "Tell us what you need and we will shape a plan."
+  },
+  "chapters": {
+    "eyebrow": "HOW WE ENGAGE",
+    "heading": "From first intake to active post.",
+    "ch1Num": "01",
+    "ch1Title": "Send a request",
+    "ch1Desc": "Tell us about the site, the shifts and the start date. You receive a reference straight away.",
+    "ch2Num": "02",
+    "ch2Title": "We assess and quote",
+    "ch2Desc": "We review your request, visit the site where needed and send a written quotation.",
+    "ch3Num": "03",
+    "ch3Title": "Guards go on post",
+    "ch3Desc": "Your guards are rostered and report for duty, and coverage is recorded shift by shift."
+  },
+  "promise": {
+    "statement": "A covenant is a promise kept. We run every post that way.",
+    "card1Title": "Every request gets a reference.",
+    "card1Desc": "No verbal handoffs lost between shifts. Every inquiry enters an immutable intake ledger.",
+    "card2Title": "Progress you can follow.",
+    "card2Desc": "Check status, site survey notes, and mobilization timelines anytime with your two-factor credentials.",
+    "card3Title": "Complaints with a deadline.",
+    "card3Desc": "Feedback and incident reports escalate directly to the Quality Assurance Directorate with SLA-tracked resolution.",
+    "card4Title": "Coverage you can see.",
+    "card4Desc": "Transparent shift schedules, relief sentry procedures, and verified electronic supervisor rounds."
+  },
+  "finalCta": {
+    "heading": "Put someone reliable on watch.",
+    "subheading": "Whether securing an executive campus, private gathering, or continuous industrial facility, our officers stand prepared.",
+    "button": "Request a Service",
+    "phone": "+1 (800) 555-SHIELD"
+  },
+  "footer": {
+    "company": "Company",
+    "services": "Services",
+    "support": "Support & Oversight",
+    "legal": "Legal & Compliance",
+    "rights": "All rights reserved. Professional Security Services Provider.",
+    "phoneLabel": "Dispatch Command",
+    "emailLabel": "Operations Desk",
+    "addressLabel": "Headquarters"
+  }
+}

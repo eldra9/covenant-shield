@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" data-fx="full" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Covenant Shield Client Portal</title>
+    <meta name="description" content="Secure, enterprise client portal for Covenant Shield Security Services clients to monitor authorized sites, service requests, operational updates, and support cases." />
+    <meta property="og:title" content="Covenant Shield Client Portal" />
+    <meta property="og:description" content="Secure, enterprise client portal for Covenant Shield Security Services clients to monitor authorized sites, service requests, operational updates, and support cases." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="/src/assets/images/logo.png" />
+
+    <!-- Google Fonts Preconnect & Font-Display Swap -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Zero Layout Shift Fraunces Fallback @font-face -->
+    <style>
+      @font-face {
+        font-family: 'Fraunces Fallback';
+        src: local('Georgia');
+        size-adjust: 104%;
+        ascent-override: 92%;
+        descent-override: 24%;
+      }
+    </style>
+
+    <!-- Inline Script for Effects Tiers & Animation Arming -->
+    <script>
+      (function() {
+        try {
+          var d = document.documentElement;
+          // Theme persistence check
+          var savedTheme = localStorage.getItem('cs_portal_theme') || 'light';
+          d.setAttribute('data-theme', savedTheme);
+
+          // Tier evaluation: off | lite | full
+          var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var nav = navigator;
+          var mem = nav.deviceMemory || 8;
+          var cpu = nav.hardwareConcurrency || 8;
+          var coarse = window.matchMedia('(pointer: coarse)').matches;
+          var saveData = nav.connection && nav.connection.saveData;
+
+          if (prefersReduced || saveData) {
+            d.setAttribute('data-fx', 'off');
+          } else if (mem <= 4 || cpu <= 4 || coarse) {
+            d.setAttribute('data-fx', 'lite');
+          } else {
+            d.setAttribute('data-fx', 'full');
+          }
+
+          // Arming: adds "anim" synchronously unless data-fx is off, "go" on fonts ready (700ms ceiling)
+          if (d.getAttribute('data-fx') !== 'off') {
+            d.classList.add('anim');
+            var safetyTimeout = setTimeout(function() {
+              d.classList.add('go');
+              setTimeout(function() {
+                d.classList.remove('anim');
+              }, 2300);
+            }, 700);
+
+            if (document.fonts && document.fonts.ready) {
+              document.fonts.ready.then(function() {
+                clearTimeout(safetyTimeout);
+                d.classList.add('go');
+                setTimeout(function() {
+                  d.classList.remove('anim');
+                }, 2300);
+              });
+            }
+          }
+        } catch (e) {
+          console.warn('FX initialization fallback', e);
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-[#F4F6F4] text-[#24332F] antialiased selection:bg-[#C9A04A]/30 selection:text-[#092824] transition-colors duration-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

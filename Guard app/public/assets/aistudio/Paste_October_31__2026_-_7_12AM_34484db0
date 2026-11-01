@@ -1,0 +1,1175 @@
+# PROJECT: BUILD THE GUARD / EMPLOYEE APPLICATION
+
+## 1. PROJECT OVERVIEW
+
+Build a complete, secure, mobile-friendly Guard/Employee Application for my existing Security Services Management System.
+
+The application will be used by security guards who work at different client sites. Guards must be able to log in, view their assigned shifts, verify their physical presence at the correct site, check in, check out, view their attendance history, request leave, and request shift swaps.
+
+The application must connect to the existing React website, backend API, and database.
+
+This is an employee-facing application, not an administrative dashboard.
+
+The main objectives are:
+
+1. Provide secure guard authentication.
+2. Display each guard's assigned shifts.
+3. Verify physical presence using GPS geofencing and a site QR code.
+4. Record accurate check-in and checkout events.
+5. Calculate attendance statuses automatically.
+6. Provide attendance history.
+7. Allow leave and shift swap requests.
+8. Display notifications and important shift information.
+9. Support mobile devices, especially Android phones.
+10. Synchronize attendance with the supervisor and administrator dashboards.
+
+Follow the existing project architecture and the requirements document.
+
+Do not create an unrelated application or replace the existing website.
+
+Do not build a separate native Android or iOS application. Build a mobile-friendly React Progressive Web App (PWA).
+
+Do not implement payroll, invoicing, online payments, or recruitment as part of this application.
+
+---
+
+# 2. FIRST: INSPECT THE EXISTING PROJECT
+
+Before writing any code, inspect the existing project.
+
+Identify:
+
+- The current React application.
+- The existing frontend framework and styling.
+- Existing routes and navigation.
+- The current authentication implementation.
+- The backend framework and API endpoints.
+- The database and existing data models.
+- The employee and guard records.
+- The site and client records.
+- The shift and roster functionality.
+- The attendance functionality, if any.
+- Existing role-based permissions.
+- Existing notification functionality.
+- Existing service worker or PWA configuration.
+- Existing supervisor and administrator dashboards.
+
+Reuse the existing infrastructure.
+
+If the backend or database is not yet implemented, build the missing components using the project's existing conventions and the approved architecture.
+
+Preferred backend architecture:
+- React frontend.
+- Node.js with Express or NestJS, or the existing backend framework.
+- PostgreSQL database.
+- REST API.
+- Secure session or JWT authentication.
+- Progressive Web App capabilities.
+
+Use the existing stack if it is already established.
+
+Do not create duplicate employee, site, shift, or attendance records.
+
+Do not replace existing functionality that is already working.
+
+After inspection, implement the application in the existing project.
+
+---
+
+# 3. APPLICATION ROUTES
+
+Create or integrate the following employee-facing routes.
+
+## /guard/login
+
+Guard login page.
+
+## /guard/dashboard
+
+Main guard dashboard.
+
+## /guard/shifts
+
+Assigned shifts and schedule.
+
+## /guard/attendance
+
+Attendance history.
+
+## /guard/check-in
+
+Check-in and site verification workflow.
+
+## /guard/check-out
+
+Checkout workflow.
+
+## /guard/leave
+
+Leave requests.
+
+## /guard/shift-swaps
+
+Shift swap requests.
+
+## /guard/notifications
+
+Notifications and alerts.
+
+## /guard/profile
+
+Employee profile.
+
+Protect all routes that require authentication.
+
+Unauthenticated users must be redirected to the login page.
+
+Authenticated users with the wrong role must not be allowed to access the guard application.
+
+Enforce permissions in the backend as well as the frontend.
+
+---
+
+# 4. GUARD LOGIN AND AUTHENTICATION
+
+Create a professional, mobile-friendly login screen.
+
+The login form must include:
+
+- Company logo.
+- Application name.
+- Employee ID field.
+- PIN/password field.
+- Show/hide password option.
+- Sign In button.
+- Loading indicator.
+- Clear error messages.
+- Optional password reset or account recovery process if supported by the existing authentication system.
+
+## Login process
+
+When a guard submits their credentials:
+
+1. Validate the form.
+2. Send the credentials to the backend over HTTPS.
+3. Verify the credentials against the real employee account.
+4. Check whether the account is active.
+5. Confirm that the user has permission to access the guard application.
+6. Apply authentication rate limits.
+7. Apply the configured lockout policy.
+8. Establish a secure authenticated session.
+9. Redirect the guard to the dashboard.
+
+The requirements document specifies a lockout after five failed login attempts.
+
+Implement that policy using the backend rather than frontend-only counters.
+
+Passwords and PINs must be securely hashed. Never store them in plaintext.
+
+Use secure cookie settings if using sessions or cookies. If using tokens, follow the existing secure authentication architecture.
+
+Do not store sensitive authentication tokens in insecure browser storage.
+
+The guard must be able to log out securely.
+
+When a session expires, redirect the guard to login and explain that authentication is required again.
+
+---
+
+# 5. MAIN GUARD DASHBOARD
+
+Create a clean and intuitive dashboard optimized for smartphone screens.
+
+The guard should immediately understand:
+
+- Who they are.
+- Which shift they are assigned to.
+- Where they must work.
+- When their shift starts and ends.
+- Whether they have checked in.
+- Whether they need to take action.
+
+## Dashboard header
+
+Display:
+
+- Company logo.
+- Guard's name.
+- Employee ID.
+- Current date.
+- Notification icon.
+- Profile menu.
+- Logout button.
+
+Retrieve employee information from the backend.
+
+## Today's shift card
+
+Display:
+
+- Site name.
+- Site address.
+- Shift date.
+- Shift start time.
+- Shift end time.
+- Current attendance status.
+- Check-in time.
+- Checkout time, if available.
+- Shift duration.
+- Relevant instructions or notes.
+
+Example:
+
+TODAY'S SHIFT
+
+Site: Main Office
+
+Address: Registered client site address
+
+Shift: 08:00 AM – 05:00 PM
+
+Attendance: Not Checked In
+
+Location Verification: Not Started
+
+Site QR Verification: Required
+
+[CHECK IN]
+
+The information above is an example of the interface only. In production, load actual shift assignments and site details from the backend.
+
+## Dashboard status cards
+
+Display relevant cards for:
+
+- Today's shift.
+- Attendance status.
+- Upcoming shift.
+- Total scheduled shifts in a selected period.
+- Recent attendance records.
+- Pending leave requests.
+- Pending shift swap requests.
+
+Do not display fabricated statistics or hardcoded attendance information.
+
+If no data exists, display a helpful empty state.
+
+## Quick actions
+
+Provide buttons for:
+
+- Check In.
+- Check Out.
+- My Schedule.
+- Attendance History.
+- Request Leave.
+- Request Shift Swap.
+- Notifications.
+
+Show or enable actions according to the guard's current state.
+
+For example, after a successful check-in, disable Check In and show the recorded time.
+
+---
+
+# 6. MY SHIFT AND SCHEDULE
+
+Build a shift schedule page.
+
+Display assigned shifts in a mobile-friendly list or calendar.
+
+Each shift must show:
+
+- Shift date.
+- Site name.
+- Site address.
+- Start time.
+- End time.
+- Assignment status.
+- Attendance status.
+- Relevant shift instructions.
+
+Allow guards to view:
+
+- Today's shift.
+- Upcoming shifts.
+- Previous shifts.
+- Shift details.
+
+Retrieve shifts from the authenticated guard's assignments.
+
+Never allow a guard to assign themselves to a shift.
+
+Never allow a guard to select a different site for attendance.
+
+Do not expose another employee's private shift information.
+
+Support overnight shifts where the shift ends on the following calendar day.
+
+Use the assigned site's time zone for displaying shift times.
+
+The requirements document specifies that timestamps are stored in UTC and displayed in East Africa Time, UTC+3.
+
+Follow that convention unless the existing application has an approved, consistent time-zone architecture.
+
+If a guard has no assigned shift, display:
+
+"You do not have an assigned shift. Please contact your supervisor."
+
+If a shift is cancelled or changed, display the updated information from the backend.
+
+---
+
+# 7. CHECK-IN USER INTERFACE
+
+This is the most important feature of the employee application.
+
+Create a guided check-in process that helps the guard verify their presence at the assigned site.
+
+The interface must be simple enough for guards using low-end Android phones and slow mobile internet.
+
+## Step 1: Select the assigned shift
+
+Display the guard's eligible assigned shift.
+
+Do not allow the guard to choose an arbitrary site or shift.
+
+If multiple eligible shifts exist, display only the shifts assigned to the authenticated guard and allow selection only according to the backend's rules.
+
+## Step 2: Explain the verification requirements
+
+Display a short message:
+
+"To check in, you must be at your assigned site and verify your location using GPS and the site's QR code."
+
+Provide a Continue button.
+
+## Step 3: Request GPS location
+
+Use the browser Geolocation API.
+
+Request a fresh location when the guard begins check-in.
+
+Capture:
+
+- Latitude.
+- Longitude.
+- Reported accuracy in meters.
+- Device-reported capture timestamp, where available.
+
+Show a loading state while retrieving the location.
+
+Handle:
+
+- Location permission denied.
+- GPS disabled.
+- Location unavailable.
+- Timeout.
+- Poor accuracy.
+- Unsupported browser.
+- Network failure.
+
+Do not silently use an old cached location.
+
+If location permission is denied, explain how to enable it in the browser or device settings.
+
+## Step 4: Validate the site geofence
+
+Send the captured location to the backend for authoritative validation.
+
+The backend must compare the guard's coordinates with the registered coordinates of the assigned site.
+
+The default geofence radius is 100 meters.
+
+The radius must be configurable per site by an authorized administrator.
+
+Require the reported GPS accuracy to be 50 meters or better for automatic attendance approval.
+
+If the guard is outside the permitted radius, display:
+
+"You are outside your assigned site's attendance area. Please move closer to the site and try again."
+
+If accuracy is insufficient, display:
+
+"Your GPS accuracy is insufficient. Move to an open area and try again."
+
+Do not allow frontend code to decide that attendance is officially approved.
+
+## Step 5: Scan the site QR code
+
+Open a mobile-friendly QR scanner using the device camera.
+
+Display clear camera permission instructions.
+
+The scanner must:
+
+- Read the QR code.
+- Handle invalid codes.
+- Handle camera permission failures.
+- Allow the guard to retry.
+- Avoid duplicate submissions.
+- Provide a clear verification result.
+
+Send the QR token to the backend for verification.
+
+The backend must confirm that the QR code belongs to the site assigned to the guard's shift.
+
+Reject expired, revoked, invalid, or mismatched codes.
+
+Do not store sensitive credentials in the QR code.
+
+Do not claim that a QR code alone proves physical presence.
+
+The printed code can be photographed or shared, so combine QR verification with GPS validation and appropriate anti-fraud controls.
+
+## Step 6: Optional selfie
+
+If the existing system enables selfie verification, allow the guard to capture a selfie.
+
+The feature must be optional and controlled by authorized settings.
+
+If disabled, do not block check-in because a selfie was not captured.
+
+Do not claim that a selfie alone proves identity.
+
+## Step 7: Review verification results
+
+Before submission, display:
+
+- Assigned site.
+- GPS verification result.
+- Distance from site.
+- GPS accuracy.
+- QR verification result.
+- Shift start time.
+
+Do not expose unnecessary precise location information.
+
+## Step 8: Submit check-in
+
+Display a Check In Now button after the required verification steps are complete.
+
+Prevent multiple clicks while the request is processing.
+
+Send the attendance request to the backend.
+
+The backend must independently revalidate:
+
+- Guard authentication.
+- Guard role.
+- Shift assignment.
+- Shift status.
+- Site status.
+- Check-in eligibility.
+- GPS location.
+- GPS accuracy.
+- Geofence distance.
+- QR token.
+- Duplicate attendance.
+- Conflicting active shifts.
+
+Use a transaction and idempotency protection to prevent duplicate attendance records.
+
+## Step 9: Show the confirmed result
+
+After the backend accepts the check-in, display:
+
+"Check-in successful."
+
+Show:
+
+- Confirmed server timestamp.
+- Site name.
+- Attendance status.
+- Scheduled shift end time.
+- Confirmation that the supervisor's dashboard has been updated, if the backend confirms that the event was published.
+
+Do not display success before the backend confirms the accepted event.
+
+---
+
+# 8. CHECKOUT WORKFLOW
+
+Create a dedicated checkout experience.
+
+The guard must only be able to check out from an eligible active attendance record belonging to them.
+
+## Checkout steps
+
+1. Display the active shift.
+2. Display the recorded check-in time.
+3. Explain the checkout verification requirements.
+4. Obtain a fresh GPS location.
+5. Validate GPS accuracy.
+6. Verify the site's geofence.
+7. Verify the QR code if required by the configured checkout policy.
+8. Submit the checkout request.
+9. Validate all requirements on the backend.
+10. Record the authoritative server timestamp.
+11. Calculate actual elapsed shift duration.
+12. Evaluate early departure.
+13. Update the attendance record.
+14. Display the successful result.
+
+The backend must prevent duplicate checkout events.
+
+Never trust a checkout timestamp submitted by the guard.
+
+If checkout verification fails, display the problem and provide the authorized exception process.
+
+If the guard leaves early, preserve the actual checkout time and flag the early departure according to company policy.
+
+Do not silently change an early checkout into a normal checkout.
+
+---
+
+# 9. ATTENDANCE STATUS DISPLAY
+
+Display the attendance statuses defined by the requirements document:
+
+- Scheduled.
+- Present.
+- Late.
+- Absent.
+- On leave.
+- Manual (pending review).
+- Left early.
+
+Use clear text and accessible visual indicators.
+
+Do not rely only on color to communicate attendance status.
+
+## Status rules
+
+Scheduled:
+The guard has an assigned shift but has not yet checked in.
+
+Present:
+The guard has completed an accepted check-in within the configured grace period.
+
+Late:
+The guard has completed an accepted check-in after the grace period.
+
+Absent:
+The guard has not completed an accepted check-in by the configured absence deadline, and no applicable exception exists.
+
+On leave:
+The guard has approved leave covering the relevant shift.
+
+Manual (pending review):
+An authorized supervisor has recorded attendance manually and the entry is awaiting review.
+
+Left early:
+The guard has checked out early according to the organization's attendance policy.
+
+Default timing:
+
+- Scheduled start: 08:00 AM.
+- Grace period: 15 minutes.
+- Absence deadline: 08:30 AM.
+
+A valid check-in at 08:15 AM is still within the grace period.
+
+A valid check-in after 08:15 AM is Late.
+
+If no accepted check-in exists by 08:30 AM, the backend should mark the guard Absent unless an applicable exception exists.
+
+These are configurable policies, not hardcoded frontend rules.
+
+The backend determines official attendance status.
+
+The frontend only displays the status returned by the backend.
+
+---
+
+# 10. MY ATTENDANCE HISTORY
+
+Create an attendance history page.
+
+Display:
+
+- Shift date.
+- Site name.
+- Scheduled start time.
+- Scheduled end time.
+- Actual check-in time.
+- Actual checkout time.
+- Attendance status.
+- Actual elapsed duration.
+- Early departure indicator.
+- Manual attendance review status, if applicable.
+
+Provide filters for:
+
+- Date range.
+- Attendance status.
+- Site, where the guard has worked at multiple authorized sites.
+
+Support pagination or efficient incremental loading.
+
+The guard must only see their own attendance records.
+
+Do not allow the guard to edit or delete official attendance records.
+
+If a guard identifies an incorrect record, provide a Request Review or Contact Supervisor action instead of allowing direct modification.
+
+All official changes must go through an authorized correction or review process and be recorded in the audit log.
+
+Do not include unnecessary GPS coordinates in the ordinary attendance history screen.
+
+---
+
+# 11. LEAVE REQUESTS
+
+Create a leave management page.
+
+The guard must be able to:
+
+- View previous leave requests.
+- Submit a leave request.
+- Select a leave start date.
+- Select a leave end date.
+- Select a leave type if supported.
+- Enter a reason.
+- Submit the request.
+- View the approval status.
+
+Use these example statuses:
+
+- Pending.
+- Approved.
+- Rejected.
+- Cancelled.
+
+The backend must validate the request.
+
+Prevent invalid date ranges and duplicate conflicting requests where applicable.
+
+Display the supervisor's decision when available.
+
+Do not allow guards to approve their own leave.
+
+An approved leave request must be reflected in the attendance and roster systems.
+
+Do not automatically mark a guard Absent for a shift covered by approved leave.
+
+---
+
+# 12. SHIFT SWAP REQUESTS
+
+Create a shift swap request page.
+
+The guard must be able to:
+
+1. View eligible assigned shifts.
+2. Select the shift they want to swap.
+3. Select an eligible proposed replacement or shift, according to company policy.
+4. Enter a reason.
+5. Submit the request.
+6. View its status.
+7. Cancel a pending request where permitted.
+
+Display statuses such as:
+
+- Pending.
+- Approved.
+- Rejected.
+- Cancelled.
+
+The backend must verify that:
+
+- The guard owns the original assignment.
+- The proposed shift is eligible.
+- Both employees are active.
+- The swap does not create conflicting shifts.
+- Required qualifications are satisfied.
+- Required approvals have been obtained.
+
+Do not change the official roster until the swap has been approved.
+
+Once approved, display the updated assignment from the backend.
+
+---
+
+# 13. NOTIFICATIONS
+
+Create a notification center.
+
+Display notifications related to:
+
+- Upcoming shifts.
+- Shift assignments.
+- Shift changes.
+- Shift cancellations.
+- Successful attendance submissions.
+- Attendance exceptions.
+- Leave decisions.
+- Shift swap decisions.
+- Supervisor instructions.
+- Relevant site or roster changes.
+
+Provide:
+
+- Notification list.
+- Read/unread state.
+- Notification timestamp.
+- Relevant shift or request link.
+- Mark as read action.
+
+Load notifications from the backend.
+
+Do not generate fake notifications.
+
+If push notifications or SMS are supported by the existing application, integrate with the existing notification infrastructure.
+
+Otherwise, provide in-app notifications and document the additional setup required for external delivery.
+
+Avoid sending duplicate notifications.
+
+---
+
+# 14. OFFLINE SUPPORT AND NETWORK FAILURES
+
+The application should be usable on unreliable mobile internet connections.
+
+Implement the application as a PWA with an appropriate service worker and manifest.
+
+Cache the application shell and static assets where safe.
+
+Do not cache private attendance responses in a way that exposes one guard's information to another user.
+
+If the network fails during attendance submission:
+
+- Display an offline warning.
+- Prevent the user from assuming the attendance was accepted.
+- Preserve an appropriate pending submission if offline queuing is supported.
+- Use a unique event identifier.
+- Retain captured device time and GPS as unverified metadata.
+- Synchronize the pending submission when connectivity returns.
+- Prevent duplicate submissions.
+- Display the final server result.
+
+The requirements document calls for preserving the original timestamp and GPS when an offline submission is synchronized.
+
+Implement this by preserving the device-captured timestamp and location as untrusted event metadata while separately recording the server-received timestamp.
+
+Do not represent the device timestamp as an authoritative server timestamp.
+
+Do not automatically mark an offline event Present without the required verification.
+
+If the organization's policy requires a server-confirmed event at the moment of check-in, keep offline submissions pending or route them to an authorized supervisor for review.
+
+Show clear statuses:
+
+- Online.
+- Offline.
+- Submission pending.
+- Synchronizing.
+- Accepted.
+- Rejected.
+- Requires review.
+
+Do not show "Check-in successful" until the backend has accepted the attendance event.
+
+---
+
+# 15. SECURITY AND ANTI-FRAUD
+
+Implement security in both the frontend and backend.
+
+The guard application must not be able to:
+
+- Edit its own official attendance.
+- Change official check-in timestamps.
+- Change official checkout timestamps.
+- Bypass GPS validation.
+- Bypass QR validation.
+- Select an unassigned site.
+- Access another guard's private data.
+- Approve its own leave or shift swaps.
+- Change its own role.
+- Access administrative endpoints.
+
+Record every check-in attempt, including rejected attempts, in the audit log.
+
+Capture appropriate details such as:
+
+- Guard ID.
+- Shift ID.
+- Site ID.
+- Event type.
+- Server timestamp.
+- Reported location, where collected.
+- Reported GPS accuracy.
+- Geofence result.
+- QR verification result.
+- Acceptance or rejection reason.
+- Request identifier.
+
+Do not log passwords, authentication tokens, or unnecessary sensitive information.
+
+Implement available checks for suspicious or mocked GPS information.
+
+Where the browser cannot reliably determine whether GPS is mocked, record that limitation and use available device-integrity signals or risk indicators.
+
+Do not continuously track guards.
+
+Capture location only for attendance verification and other explicitly authorized operations.
+
+The requirements document specifies that guard GPS should be captured at check-in and checkout, not tracked continuously.
+
+Use HTTPS for all production communication.
+
+Enforce role checks on every protected API call.
+
+---
+
+# 16. USER INTERFACE AND DESIGN
+
+Build a professional security-services interface.
+
+Use the existing website's colors, typography, branding, and component styles.
+
+Do not redesign the entire public website unless necessary for integration.
+
+The guard application should have:
+
+- A simple dashboard.
+- Clear attendance actions.
+- Large touch-friendly buttons.
+- Readable text.
+- Minimal unnecessary navigation.
+- Clear loading and error states.
+- Accessible forms.
+- Responsive layouts.
+- Consistent icons.
+- Accessible contrast.
+- Proper keyboard navigation.
+
+Use a bottom navigation bar on small screens if appropriate.
+
+Suggested navigation:
+
+1. Home.
+2. My Shifts.
+3. Attendance.
+4. Requests.
+5. Profile.
+
+Keep Check In prominent when the guard has an eligible shift.
+
+Do not overload the dashboard with administrative information.
+
+Optimize the interface for low-end Android phones and slow mobile connections.
+
+Target a guard check-in page load time under three seconds under the conditions specified in the requirements document.
+
+Target WCAG 2.1 AA accessibility where practical.
+
+---
+
+# 17. LANGUAGE SUPPORT
+
+Use English as the initial language.
+
+Do not hardcode all interface text directly into components.
+
+Use translation files or the existing internationalization framework.
+
+Organize text so Amharic can be added later without changing application logic.
+
+All buttons, labels, validation messages, status names, error messages, and instructions should use the translation system.
+
+Do not machine-translate or invent an incomplete Amharic translation during this implementation unless requested.
+
+---
+
+# 18. BACKEND INTEGRATION
+
+Connect all application screens to the real backend API.
+
+Create or reuse endpoints for:
+
+- Authentication.
+- Current employee profile.
+- Today's shifts.
+- Shift details.
+- Attendance history.
+- Check-in.
+- Checkout.
+- QR verification.
+- Leave requests.
+- Shift swap requests.
+- Notifications.
+- Attendance review requests.
+
+The endpoint names must follow the existing backend conventions.
+
+The backend must determine:
+
+- Whether the guard is authenticated.
+- Which shifts the guard can access.
+- Whether check-in is permitted.
+- Whether GPS satisfies the geofence rules.
+- Whether QR verification passes.
+- Whether the guard is late.
+- Whether the guard is absent.
+- Whether checkout is permitted.
+- Whether the record is a duplicate.
+- Whether the request has the necessary permissions.
+
+The frontend must not calculate an official attendance status and write it directly to the database.
+
+Use the backend API for all official attendance operations.
+
+Implement:
+
+- Request validation.
+- Consistent error responses.
+- Authentication.
+- Authorization.
+- Rate limiting where appropriate.
+- Database transactions.
+- Idempotency.
+- Audit logging.
+
+Do not use hardcoded data or mock API responses in production.
+
+If a required backend endpoint does not exist, implement it in the existing backend.
+
+---
+
+# 19. DATABASE INTEGRATION
+
+Inspect the current database schema before making changes.
+
+Reuse existing tables and relationships.
+
+The employee application should work with the existing records for:
+
+- Users.
+- Employees.
+- Sites.
+- Clients.
+- Shifts.
+- Attendance records.
+- Leave requests.
+- Audit logs.
+
+The requirements document identifies the following attendance information:
+
+- Shift ID.
+- Employee ID.
+- Check-in timestamp.
+- Check-in latitude and longitude.
+- Checkout timestamp.
+- Checkout latitude and longitude.
+- Attendance method, such as GPS, QR, or manual.
+- Attendance status.
+- Verification or review flags.
+- Approving user, where applicable.
+
+Extend the schema only when necessary.
+
+Add appropriate foreign keys, indexes, unique constraints, and transactions.
+
+Preserve historical records.
+
+Store authoritative timestamps in UTC and display them in East Africa Time, UTC+3.
+
+Do not permit the guard's browser to write directly to protected database tables.
+
+---
+
+# 20. PERFORMANCE AND RELIABILITY
+
+Optimize the application for:
+
+- Android mobile browsers.
+- Slow 3G connections.
+- Limited memory.
+- Limited processing power.
+- Unreliable connectivity.
+- Up to 500 guards and 200 sites, as specified in the requirements document.
+
+Use efficient API calls.
+
+Avoid repeatedly downloading large attendance histories.
+
+Use pagination where appropriate.
+
+Avoid unnecessary frontend re-renders.
+
+Use loading skeletons or indicators where helpful.
+
+Handle expired sessions and server failures gracefully.
+
+Prevent accidental duplicate form submissions.
+
+Provide an appropriate retry mechanism for transient network failures.
+
+Do not retry attendance operations in a way that creates duplicate records.
+
+---
+
+# 21. TESTING REQUIREMENTS
+
+Create and run automated tests.
+
+## Authentication
+
+Test that:
+
+- A valid guard can log in.
+- Invalid credentials are rejected.
+- Inactive guards cannot access the application.
+- Unauthenticated users cannot access protected routes.
+- Guards cannot access supervisor or administrator APIs.
+
+## Shifts
+
+Test that:
+
+- A guard sees their actual assigned shifts.
+- Unassigned shifts are inaccessible.
+- Cancelled shifts cannot be checked into.
+- Overnight shifts display correctly.
+- Updated shift assignments appear correctly.
+
+## Check-In
+
+Test that:
+
+- A valid check-in is accepted.
+- An out-of-geofence check-in is rejected.
+- Poor GPS accuracy is flagged.
+- An invalid QR code is rejected.
+- A QR code for another site is rejected.
+- Duplicate submissions do not create duplicate attendance.
+- Server time is used for authoritative timestamps.
+- The correct attendance status is returned.
+
+## Checkout
+
+Test that:
+
+- An eligible guard can check out.
+- A guard cannot check out another employee's shift.
+- Duplicate checkout is rejected.
+- The checkout timestamp is generated by the server.
+- Early checkout is flagged appropriately.
+
+## Attendance History
+
+Test that:
+
+- The guard sees their own records.
+- Other guards' records remain inaccessible.
+- Records display the correct times and statuses.
+- Guards cannot edit official attendance records.
+
+## Leave and Shift Swaps
+
+Test that:
+
+- Requests can be submitted.
+- Request status is displayed correctly.
+- Unauthorized approval is rejected.
+- Approved leave is reflected in attendance processing.
+- Approved shift swaps update the roster correctly.
+
+## Offline Support
+
+Test that:
+
+- The application identifies offline conditions.
+- Pending submissions are synchronized correctly.
+- Duplicate synchronization is prevented.
+- Device timestamps are not treated as authoritative server timestamps.
+- The guard sees the actual backend result.
+
+## Security
+
+Test that:
+
+- Role permissions are enforced by the backend.
+- GPS and QR validation cannot be bypassed through direct API calls.
+- Attendance attempts are audited.
+- Authentication secrets are not exposed.
+- Private employee data is not leaked.
+
+---
+
+# 22. ACCEPTANCE CRITERIA
+
+The application is ready only when:
+
+1. The guard can log in using a real employee account.
+2. The guard sees their assigned shifts.
+3. The dashboard displays real site information.
+4. The guard can request GPS verification.
+5. The backend validates the geofence.
+6. The guard can scan the site QR code.
+7. The backend validates the QR token.
+8. Successful check-in records server time and location.
+9. Successful checkout records server time and location.
+10. The system applies the correct attendance rules.
+11. The guard can view attendance history.
+12. The guard cannot edit official attendance records.
+13. Leave requests work.
+14. Shift swap requests work.
+15. Notifications are connected to the backend.
+16. Offline conditions are handled honestly and safely.
+17. Attendance changes reach the supervisor dashboard.
+18. The interface works on mobile browsers.
+19. Existing website functionality remains intact.
+20. Automated tests pass.
+21. The implementation uses real database records rather than hardcoded examples.
+22. Deployment and configuration requirements are documented.
+
+---
+
+# 23. FINAL IMPLEMENTATION INSTRUCTIONS
+
+Do not stop after creating the UI.
+
+Do not create buttons that have no working functionality.
+
+Do not use fake check-in success messages.
+
+Do not leave the attendance backend disconnected.
+
+Do not allow the frontend to bypass server-side authorization.
+
+Do not create a separate native mobile app.
+
+Do not replace the existing React website.
+
+First inspect the project, then implement the complete guard application and integrate it with the existing backend.
+
+After implementation:
+
+1. Run database migrations if necessary.
+2. Start the frontend and backend.
+3. Test guard authentication.
+4. Test the complete GPS and QR check-in workflow.
+5. Test checkout.
+6. Test attendance history.
+7. Test leave and shift swap requests.
+8. Test backend authorization.
+9. Test mobile responsiveness.
+10. Run the automated tests.
+11. Fix any errors discovered.
+12. Document any missing external configuration.
+
+Finally, report:
+
+- What was implemented.
+- Which files were created or modified.
+- Which backend endpoints were created or reused.
+- Which database changes were made.
+- Which tests passed or failed.
+- How to run the application.
+- Any remaining limitations.
+
+The final result must be a fully integrated, functional, mobile-friendly Guard/Employee PWA connected to the existing Security Services Management System.

@@ -1,0 +1,235 @@
+@import "./design-tokens.css";
+
+/* Base Typography & Canvas */
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--mist);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono-ref {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* WCAG 2.1 AA Focus Ring Contract */
+:focus-visible {
+  outline: 2px solid var(--emerald);
+  outline-offset: 2px;
+}
+
+.dark :focus-visible,
+[data-surface="dark"] :focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Skip link for a11y */
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 1rem;
+  z-index: 1000;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--emerald);
+  color: var(--white);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Duotone Photography Protocol */
+.duotone-container {
+  position: relative;
+  overflow: hidden;
+}
+.duotone-img {
+  filter: grayscale(1) contrast(1.05);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.duotone-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: #003C35;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* Foil Gradient Text & Shimmer */
+.text-foil {
+  background: var(--foil);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--gold);
+}
+
+/* Watch Line: 1px gold hairline with 120px traveling highlight sweeping every 8s */
+.watch-line {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  background-color: var(--line-gold);
+  overflow: hidden;
+}
+.watch-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120px;
+  width: 120px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold-300), transparent);
+  animation: watchLineSweep 8s var(--e-silk) infinite;
+}
+@keyframes watchLineSweep {
+  0% { left: -120px; }
+  35%, 100% { left: 100%; }
+}
+
+/* Shield-notch bottom edge: clip-path dipping 24px to a point into next section */
+.shield-notch-edge {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), 50% 100%, 0 calc(100% - 24px));
+}
+
+/* Foil Hairline & Card Sheen */
+.foil-hairline {
+  background: var(--foil);
+}
+
+.sheen-card {
+  position: relative;
+  overflow: hidden;
+}
+.sheen-card .sheen-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line-gold);
+  overflow: hidden;
+}
+.sheen-card .sheen-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120px;
+  width: 120px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #E6CB8A, transparent);
+  transition: none;
+}
+.sheen-card:hover .sheen-line::after {
+  animation: sheenTravel 0.9s var(--e-silk) 1;
+}
+@keyframes sheenTravel {
+  0% { left: -120px; }
+  100% { left: 100%; }
+}
+
+/* Keyframe Animations */
+@keyframes ringPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(201, 160, 74, 0.4);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 16px rgba(201, 160, 74, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(201, 160, 74, 0);
+  }
+}
+
+.ring-pulse-hover:hover {
+  animation: ringPulse 1.2s var(--e-lux) 1;
+}
+
+/* Watermark slow ambient rotation (160s) */
+@keyframes watermarkSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-watermark {
+  animation: watermarkSpin 160s linear infinite;
+}
+
+/* Gold headline word periodic shimmer (every 10s) */
+@keyframes textShimmer {
+  0%, 80% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.shimmer-text {
+  background: linear-gradient(120deg, #A47F2E 0%, #C9A04A 25%, #FFF0C2 50%, #C9A04A 75%, #A47F2E 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 10s ease-in-out infinite;
+}
+
+/* Effects tier rules */
+html[data-fx="off"] * {
+  animation: none !important;
+  transition: none !important;
+}
+
+html[data-fx="lite"] .animate-watermark,
+html[data-fx="lite"] .watch-line::after {
+  animation: none !important;
+}
+
+/* View Transitions API Luxury Wipe */
+@keyframes vtNewPage {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+::view-transition-old(root) {
+  animation: none;
+}
+::view-transition-new(root) {
+  animation: vtNewPage 600ms var(--e-silk) forwards;
+}
+
+/* Custom Refined Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--mist);
+}
+::-webkit-scrollbar-thumb {
+  background: #A0B3AB;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--emerald);
+}

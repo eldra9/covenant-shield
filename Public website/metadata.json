@@ -1,0 +1,8 @@
+{
+  "name": "Remix Covenant Shield Security Services",
+  "description": "Official public portal for Covenant Shield Security Services - premier guarding, patrols, executive VIP protection, CCTV monitoring, service booking, and secure request tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

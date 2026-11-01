@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import "../apps/web/src/styles/design-tokens.css";
+@import "../apps/web/src/styles/globals.css";
+
+@theme {
+  --color-emerald: #003C35;
+  --color-gold: #C9A04A;
+  --color-white: #FFFFFF;
+  --color-forest: #092824;
+  --color-mist: #F4F6F4;
+  --color-ink: #24332F;
+  --color-emerald-700: #0B5247;
+  --color-emerald-50: #E6EFEC;
+  --color-forest-2: #0D322D;
+  --color-forest-3: #123D37;
+  --color-gold-600: #A47F2E;
+  --color-gold-300: #E6CB8A;
+  --color-line: #D9E0DC;
+  --color-text-muted: #52625D;
+
+  --font-display: 'Fraunces', 'Fraunces Fallback', 'Noto Serif Ethiopic', Georgia, serif;
+  --font-body: 'Inter', 'Noto Sans Ethiopic', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="covenant_emerald">#003C35</color>
+    <color name="covenant_gold">#C9A04A</color>
+    <color name="covenant_forest">#092824</color>
+    <color name="covenant_mist">#F4F6F4</color>
+    <color name="covenant_ink">#24332F</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+</resources>
+

@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Build outputs
+dist/
+build/
+*.apk
+*.aab
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+
+# Android / Gradle
+.gradle/
+local.properties
+*.iml
+.idea/
+
+# OS and logs
+.DS_Store
+Thumbs.db
+*.log
+*.pid
+backend.log
+backend.pid
+
+# Scratch and caches
+.cache/
+.temp/

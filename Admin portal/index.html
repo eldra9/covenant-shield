@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" data-fx="full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Covenant Shield Command · Security Operations</title>
+    <meta name="description" content="Covenant Shield Command: dark-first command centre for operations staff, supervisors, and administrators. Managing service requests, guard rosters, biometric attendance, cases, and audit governance." />
+    <meta property="og:title" content="Covenant Shield Command · Security Operations" />
+    <meta property="og:description" content="Dark-first command centre for Covenant Shield Security Services." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="/src/assets/images/logo.png" />
+
+    <!-- Google Fonts Preconnect and Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+
+    <!-- Effects tier and animation detection script -->
+    <script>
+      (function() {
+        try {
+          var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var saveData = navigator.connection && navigator.connection.saveData;
+          var tier = 'full';
+          if (prefersReduced || saveData) {
+            tier = 'off';
+          } else {
+            var mem = navigator.deviceMemory || 8;
+            var cores = navigator.hardwareConcurrency || 8;
+            if (mem <= 4 || cores <= 4) {
+              tier = 'lite';
+            }
+          }
+          document.documentElement.setAttribute('data-fx', tier);
+
+          if (tier !== 'off') {
+            document.documentElement.classList.add('anim');
+            var fontTimeout = setTimeout(function() {
+              document.documentElement.classList.add('go');
+            }, 700);
+
+            if (document.fonts && document.fonts.ready) {
+              document.fonts.ready.then(function() {
+                clearTimeout(fontTimeout);
+                document.documentElement.classList.add('go');
+              });
+            }
+
+            var safety = setTimeout(function() {
+              document.documentElement.classList.remove('anim');
+              document.documentElement.classList.remove('go');
+            }, 3000);
+          }
+        } catch (e) {
+          document.documentElement.setAttribute('data-fx', 'lite');
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-[#092824] text-[#F4F6F4] antialiased selection:bg-[#C9A04A]/30 selection:text-[#FFFFFF]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

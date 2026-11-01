@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix Remix AegisGuard",
+  "description": "Secure mobile employee app for security guards with GPS geofencing, QR check-in, attendance tracking, shift scheduling, and leave requests.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

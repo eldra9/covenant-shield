@@ -1,0 +1,51 @@
+name: Build iOS App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-ios:
+    name: Build iOS Runner & IPA
+    runs-on: macos-14 # Apple Silicon cloud runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.x'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          cd "Guard app/flutter_app"
+          flutter pub get
+
+      - name: Build iOS App (No Codesign for direct testing)
+        run: |
+          cd "Guard app/flutter_app"
+          flutter build ios --release --no-codesign
+
+      - name: Package Payload into IPA
+        run: |
+          cd "Guard app/flutter_app/build/ios/iphoneos"
+          mkdir -p Payload
+          cp -r Runner.app Payload/
+          zip -r AegisGuard-iOS.ipa Payload
+
+      - name: Upload iOS IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AegisGuard-iOS-IPA
+          path: Guard app/flutter_app/build/ios/iphoneos/AegisGuard-iOS.ipa

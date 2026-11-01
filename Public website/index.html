@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-fx="full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Covenant Shield · Security Services</title>
+    <meta name="description" content="Professionally managed security for businesses, institutions and events, with one clear record of every request, every post and every shift." />
+    <meta property="og:title" content="Covenant Shield · Security Services" />
+    <meta property="og:description" content="Professionally managed security for businesses, institutions and events, with one clear record of every request, every post and every shift." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/png" href="/src/assets/images/logo.png" />
+    
+    <!-- Google Fonts: Fraunces (opsz 9..144, 300..700 roman & italic), Inter (400,500,600), IBM Plex Mono (500) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=IBM+Plex+Mono:wght@500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+      /* Zero layout-shift Fraunces Fallback tuned with size-adjust */
+      @font-face {
+        font-family: 'Fraunces Fallback';
+        src: local('Georgia');
+        size-adjust: 104%;
+        ascent-override: 92%;
+        descent-override: 24%;
+      }
+    </style>
+
+    <!-- Synchronous Tier Detection & Animation Arming Script -->
+    <script>
+      (function() {
+        try {
+          var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var saveData = navigator.connection && navigator.connection.saveData;
+          var tier = 'full';
+          
+          if (prefersReduced || saveData) {
+            tier = 'off';
+          } else {
+            var mem = navigator.deviceMemory;
+            var cores = navigator.hardwareConcurrency;
+            var coarse = window.matchMedia('(pointer: coarse)').matches;
+            if ((mem && mem <= 4) || (cores && cores <= 4) || coarse) {
+              tier = 'lite';
+            }
+          }
+          document.documentElement.setAttribute('data-fx', tier);
+
+          if (tier !== 'off') {
+            document.documentElement.classList.add('anim');
+            var timer = setTimeout(function() {
+              document.documentElement.classList.add('go');
+            }, 700);
+
+            if (document.fonts && document.fonts.ready) {
+              document.fonts.ready.then(function() {
+                clearTimeout(timer);
+                document.documentElement.classList.add('go');
+              });
+            }
+
+            // Clean-up arming after safety timeout
+            setTimeout(function() {
+              document.documentElement.classList.remove('anim');
+            }, 3000);
+          }
+        } catch (e) {
+          document.documentElement.setAttribute('data-fx', 'lite');
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-[#F4F6F4] text-[#24332F] antialiased selection:bg-[#C9A04A] selection:text-white min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

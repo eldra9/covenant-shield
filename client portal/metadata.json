@@ -1,0 +1,6 @@
+{
+  "name": "Covenant Shield Client Portal",
+  "description": "Secure, enterprise client portal for Covenant Shield Security Services clients to monitor authorized sites, service requests, operational updates, and support cases.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
