@@ -95,7 +95,7 @@ class AppTheme {
           letterSpacing: 0.3,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         color: AppColors.white,
         margin: EdgeInsets.zero,
@@ -188,7 +188,7 @@ class AppTheme {
           letterSpacing: 0.3,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 0,
         color: const Color(0xFF0D2823),
         margin: EdgeInsets.zero,
