@@ -28,15 +28,22 @@ workflows:
           flutter build ios --simulator --debug
       - name: Package iOS IPA & Simulator App
         script: |
-          mkdir -p "$CM_BUILD_DIR/artifacts"
+          mkdir -p artifacts
           # Package Simulator zip
           cd build/ios/iphonesimulator
-          zip -qr "$CM_BUILD_DIR/artifacts/AegisGuard-iOS-Simulator.zip" Runner.app
-          cd "$CM_BUILD_DIR"
+          zip -qr ../../../artifacts/AegisGuard-iOS-Simulator.zip Runner.app
+          cd ../../..
           # Package IPA
           mkdir -p Payload
-          cp -r "Guard app/flutter_app/build/ios/iphonesimulator/Runner.app" Payload/
-          zip -qr "$CM_BUILD_DIR/artifacts/AegisGuard-iOS.ipa" Payload
+          cp -r build/ios/iphonesimulator/Runner.app Payload/
+          zip -qr artifacts/AegisGuard-iOS.ipa Payload
+          # Also place in root build dir
+          cp artifacts/* "$CM_BUILD_DIR/" 2>/dev/null || true
+          ls -lh artifacts/
     artifacts:
-      - artifacts/*.ipa
-      - artifacts/*.zip
+      - "artifacts/*.ipa"
+      - "artifacts/*.zip"
+      - "$CM_BUILD_DIR/*.ipa"
+      - "$CM_BUILD_DIR/*.zip"
+      - "**/*.ipa"
+      - "**/*.zip"
