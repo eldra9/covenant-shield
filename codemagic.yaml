@@ -1,0 +1,42 @@
+workflows:
+  ios-workflow:
+    name: AegisGuard iOS App
+    max_build_duration: 30
+    instance_type: mac_mini_m2
+    working_directory: "Guard app/flutter_app"
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Prepare native iOS and dependencies
+        script: |
+          rm -rf ios
+          flutter create . --platforms=ios --org co.ke.covenantshield
+          flutter pub get
+      - name: Configure iOS permissions
+        script: |
+          cd ios
+          PLIST="Runner/Info.plist"
+          /usr/libexec/PlistBuddy -c "Add :NSLocationWhenInUseUsageDescription string 'AegisGuard requires location access to verify guard check-ins.'" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSLocationAlwaysAndWhenInUseUsageDescription string 'AegisGuard requires location access for geofence verification.'" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'AegisGuard requires camera access to scan security entry QR codes.'" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true" "$PLIST" 2>/dev/null || true
+      - name: Build iOS Application
+        script: |
+          flutter build ios --simulator --debug
+      - name: Package iOS IPA & Simulator App
+        script: |
+          mkdir -p "$CM_BUILD_DIR/artifacts"
+          # Package Simulator zip
+          cd build/ios/iphonesimulator
+          zip -qr "$CM_BUILD_DIR/artifacts/AegisGuard-iOS-Simulator.zip" Runner.app
+          cd "$CM_BUILD_DIR"
+          # Package IPA
+          mkdir -p Payload
+          cp -r "Guard app/flutter_app/build/ios/iphonesimulator/Runner.app" Payload/
+          zip -qr "$CM_BUILD_DIR/artifacts/AegisGuard-iOS.ipa" Payload
+    artifacts:
+      - artifacts/*.ipa
+      - artifacts/*.zip
