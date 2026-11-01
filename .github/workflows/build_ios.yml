@@ -37,41 +37,38 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" "$PLIST" 2>/dev/null || true
           /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true" "$PLIST" 2>/dev/null || true
 
-      - name: Disable Xcode Code Signing for CI
+      - name: Install CocoaPods
         run: |
           cd "Guard app/flutter_app/ios"
-          # Disable signing in all configs
-          for CFG in Flutter/Debug.xcconfig Flutter/Release.xcconfig; do
-            if [ -f "$CFG" ]; then
-              echo "CODE_SIGNING_ALLOWED=NO" >> "$CFG"
-              echo "CODE_SIGNING_REQUIRED=NO" >> "$CFG"
-              echo "CODE_SIGN_IDENTITY=" >> "$CFG"
-              echo "EXPANDED_CODE_SIGN_IDENTITY=" >> "$CFG"
-            fi
-          done
-          # Also patch project.pbxproj to turn off code signing requirement
-          sed -i '' 's/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual; CODE_SIGNING_ALLOWED = NO; CODE_SIGNING_REQUIRED = NO;/g' Runner.xcodeproj/project.pbxproj 2>/dev/null || true
+          pod install
 
-      - name: Build iOS IPA & Runner
+      - name: Build iOS Application with Xcode (Unsigned)
         run: |
-          cd "Guard app/flutter_app"
-          # Build unsigned IPA archive
-          flutter build ipa --no-codesign || flutter build ios --release --no-codesign
+          cd "Guard app/flutter_app/ios"
+          set -o pipefail
+          xcodebuild -workspace Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath DerivedData \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            clean build 2>&1 | tee xcodebuild.log || (echo "=== XCODEBUILD FAILED. LAST 80 LINES: ===" && tail -n 80 xcodebuild.log && exit 1)
 
       - name: Package IPA
         run: |
           cd "Guard app/flutter_app"
           mkdir -p Payload
-          # Search for Runner.app in build outputs
-          RUNNER_APP=$(find build -name "Runner.app" -type d | head -n 1)
+          RUNNER_APP=$(find ios/DerivedData -name "Runner.app" -type d | head -n 1)
           if [ -n "$RUNNER_APP" ]; then
             echo "Found Runner.app at $RUNNER_APP"
             cp -r "$RUNNER_APP" Payload/
             zip -qr AegisGuard-iOS.ipa Payload
             ls -lh AegisGuard-iOS.ipa
           else
-            echo "❌ Error: Runner.app not found. Build tree:"
-            find build -maxdepth 4 || true
+            echo "❌ Error: Runner.app not found. Search output:"
+            find ios/DerivedData -maxdepth 5 || true
             exit 1
           fi
 
