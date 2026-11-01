@@ -1,0 +1,2 @@
+[tool.vercel]
+entrypoint = "covenant_shield.wsgi:application"
