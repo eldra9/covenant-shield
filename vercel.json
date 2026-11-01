@@ -4,6 +4,7 @@
     "adminportal": {
       "root": "Admin portal",
       "framework": "vite",
+      "installCommand": "npm install --legacy-peer-deps",
       "bindings": [
         {
           "type": "service",
@@ -20,6 +21,7 @@
     "clientportal": {
       "root": "client portal",
       "framework": "vite",
+      "installCommand": "npm install --legacy-peer-deps",
       "bindings": [
         {
           "type": "service",
@@ -32,6 +34,7 @@
     "publicwebsite": {
       "root": "Public website",
       "framework": "vite",
+      "installCommand": "npm install --legacy-peer-deps",
       "bindings": [
         {
           "type": "service",
