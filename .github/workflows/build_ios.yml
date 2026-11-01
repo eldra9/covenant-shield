@@ -8,7 +8,7 @@ on:
 jobs:
   build-ios:
     name: Build iOS Runner & IPA
-    runs-on: macos-14 # Apple Silicon macOS runner
+    runs-on: macos-14 # Apple Silicon cloud runner
 
     steps:
       - name: Checkout repository
@@ -20,20 +20,26 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Configure iOS platform and dependencies
+      - name: Clean and regenerate official native iOS platform
         run: |
           cd "Guard app/flutter_app"
+          rm -rf ios
           flutter create . --platforms=ios --org co.ke.covenantshield
           flutter pub get
+          cd ios
+          echo "CODE_SIGNING_ALLOWED=NO" >> Flutter/Release.xcconfig
+          echo "CODE_SIGNING_REQUIRED=NO" >> Flutter/Release.xcconfig
+          echo "CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
+          echo "EXPANDED_CODE_SIGN_IDENTITY=" >> Flutter/Release.xcconfig
 
-      - name: Configure Info.plist permissions
+      - name: Configure iOS permissions in Info.plist
         run: |
           cd "Guard app/flutter_app/ios"
-          # Add permissions using PlistBuddy (native macOS tool)
           PLIST="Runner/Info.plist"
           /usr/libexec/PlistBuddy -c "Add :NSLocationWhenInUseUsageDescription string 'AegisGuard requires location access to verify guard check-ins.'" "$PLIST" 2>/dev/null || true
           /usr/libexec/PlistBuddy -c "Add :NSLocationAlwaysAndWhenInUseUsageDescription string 'AegisGuard requires location access for geofence verification.'" "$PLIST" 2>/dev/null || true
           /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'AegisGuard requires camera access to scan security entry QR codes.'" "$PLIST" 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity dict" "$PLIST" 2>/dev/null || true
           /usr/libexec/PlistBuddy -c "Add :NSAppTransportSecurity:NSAllowsArbitraryLoads bool true" "$PLIST" 2>/dev/null || true
 
       - name: Build iOS Application (Release, No Codesign)
@@ -44,16 +50,10 @@ jobs:
       - name: Package IPA
         run: |
           cd "Guard app/flutter_app"
-          APP_PATH="build/ios/iphoneos/Runner.app"
-          if [ -d "$APP_PATH" ]; then
-            mkdir -p Payload
-            cp -r "$APP_PATH" Payload/
-            zip -r AegisGuard-iOS.ipa Payload
-          else
-            echo "Runner.app not found in expected directory. Checking build outputs:"
-            find build -name "Runner.app" || true
-            exit 1
-          fi
+          mkdir -p Payload
+          cp -r build/ios/iphoneos/Runner.app Payload/
+          zip -qr AegisGuard-iOS.ipa Payload
+          ls -lh AegisGuard-iOS.ipa
 
       - name: Upload iOS IPA Artifact
         uses: actions/upload-artifact@v4
