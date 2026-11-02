@@ -1,5 +1,5 @@
 import React from 'react';
-
+import logo from '../../assets/images/logo.png';
 interface BrandLogoProps {
   placement?: 'nav' | 'footer' | 'header';
   variant?: 'light' | 'dark';
@@ -34,7 +34,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       {/* Official Emblem */}
       <div className={`relative shrink-0 ${iconHeightClass} flex items-center justify-center`}>
         <img
-          src="/src/assets/images/logo.jpg"
+          src={logo}
           alt="Covenant Shield logo"
           className="h-full w-full object-contain drop-shadow-[0_0_10px_rgba(201,160,74,0.18)]"
         />
