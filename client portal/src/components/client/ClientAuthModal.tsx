@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Shield, Lock, Mail, User, Building, Phone, ArrowRight, Eye, EyeOff, AlertCircle } from 'lucide-react';
-
+import logo from '../../assets/images/logo.png';
 interface ClientAuthModalProps {
   isOpen: boolean;
   onSuccess: (userData: any, accessToken: string) => void;
@@ -113,7 +113,7 @@ export const ClientAuthModal: React.FC<ClientAuthModalProps> = ({
         <div className="flex items-center justify-center mb-6">
           <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[#C9A04A]/50 shadow-lg shadow-black/50">
             <img
-              src="/src/assets/images/logo.png"
+              src={logo}
               alt="Covenant Shield Logo"
               className="w-full h-full object-cover"
             />
