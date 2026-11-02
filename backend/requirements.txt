@@ -10,3 +10,4 @@ celery>=5.4.0
 whitenoise>=6.7.0
 pytest>=8.0.0
 pytest-django>=4.8.0
+gunicorn>=23.0.0
